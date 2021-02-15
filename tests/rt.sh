@@ -425,10 +425,12 @@ fi
 if [[ $MACHINE_ID = hera.* ]] || [[ $MACHINE_ID = orion.* ]] || [[ $MACHINE_ID = cheyenne.* ]] || [[ $MACHINE_ID = gaea.* ]] || [[ $MACHINE_ID = jet.* ]]; then
   RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-20201223/${RT_COMPILER^^}}
 else
-  RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-20201223}
+  #RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-20201223}
+  RTPWD=/work/noaa/stmp/libin/RT/NEMSfv3gfs/develop-20201223/${RT_COMPILER^^}
 fi
 
-INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20201220/}
+#INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20201220/}
+INPUTDATA_ROOT=/work/noaa/stmp/libin/RT/NEMSfv3gfs/input-data-20201220/
 INPUTDATA_ROOT_WW3=${INPUTDATA_ROOT}/WW3_input_data_20201220/
 
 shift $((OPTIND-1))

@@ -21,12 +21,12 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules/Modules)
 set(32BIT           OFF CACHE BOOL "Enable 32BIT (single precision arithmetic in dycore)")
 set(AVX2            ON  CACHE BOOL "Enable AVX2 instruction set")
 set(SIMDMULTIARCH   OFF CACHE BOOL "Enable multi-target SIMD instruction sets")
-set(CCPP            ON  CACHE BOOL "Enable CCPP")
+set(CCPP            OFF CACHE BOOL "Enable CCPP")
 set(DEBUG           OFF CACHE BOOL "Enable DEBUG mode")
 set(DEBUG_LINKMPI   ON  CACHE BOOL "Enable linkmpi option when DEBUG mode is on")
 set(INLINE_POST     OFF CACHE BOOL "Enable inline post")
 set(MULTI_GASES     OFF CACHE BOOL "Enable MULTI_GASES")
-set(OPENMP          ON  CACHE BOOL "Enable OpenMP threading")
+set(OPENMP          OFF CACHE BOOL "Enable OpenMP threading")
 set(PARALLEL_NETCDF OFF CACHE BOOL "Enable parallel NetCDF")
 set(QUAD_PRECISION  ON  CACHE BOOL "Enable QUAD_PRECISION (for certain grid metric terms in dycore)")
 set(REPRO           OFF CACHE BOOL "Enable REPRO mode")
@@ -34,6 +34,9 @@ set(WW3             OFF CACHE BOOL "Enable WW3")
 set(S2S             OFF CACHE BOOL "Enable S2S")
 set(JEDI_DRIVER     OFF CACHE BOOL "Enable JEDI as top level driver")
 set(DATM            OFF CACHE BOOL "Enable Data Atmosphere")
+set(DATM_CDEPS      OFF CACHE BOOL "Enable CDEPS Data Atmosphere")
+set(CDEPS           OFF CACHE BOOL "Enable CDEPS")
+set(CMEPS           OFF CACHE BOOL "Enable CMEPS")
 
 ###############################################################################
 ### Set CMAKE_BUILD_TYPE for DEBUG mode
@@ -57,7 +60,7 @@ endif()
 message("")
 message("32BIT ............ ${32BIT}")
 message("AVX2 ............. ${AVX2}")
-message("SIMDMULTIARCH ...  ${SIMDMULTIARCH}")
+message("SIMDMULTIARCH .... ${SIMDMULTIARCH}")
 message("CCPP ............. ${CCPP}")
 message("DEBUG ............ ${DEBUG}")
 message("DEBUG_LINKMPI .... ${DEBUG_LINKMPI}")
@@ -70,6 +73,9 @@ message("REPRO ............ ${REPRO}")
 message("WW3 .............. ${WW3}")
 message("S2S .............. ${S2S}")
 message("DATM ............. ${DATM}")
+message("DATM_CDEPS ....... ${DATM_CDEPS}")
+message("CDEPS ............ ${CDEPS}")
+message("CMEPS ............ ${CMEPS}")
 message("")
 
 get_filename_component (C_COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
@@ -96,7 +102,7 @@ if(OPENMP)
 endif()
 find_package(NetCDF REQUIRED C Fortran)
 find_package(ESMF MODULE REQUIRED)
-if(S2S)
+if(S2S OR CDEPS)
   find_package(PIO REQUIRED COMPONENTS C Fortran STATIC)
 endif()
 
@@ -112,19 +118,23 @@ endif()
 # See https://github.com/NOAA-EMC/NCEPLIBS-nemsio/pull/22
 target_link_libraries(nemsio::nemsio INTERFACE w3emc::w3emc_d bacio::bacio_4)
 
-if(CCPP)
-  find_package(Python 3 QUIET COMPONENTS Interpreter)
-  if (NOT Python_Interpreter_FOUND)
-    find_package(Python 2.7 REQUIRED COMPONENTS Interpreter)
-  endif()
-  message("Found Python: ${Python_EXECUTABLE}")
-endif()
+# Configure Python
+find_package(Python 3 REQUIRED COMPONENTS Interpreter)
+message("Found Python: ${Python_EXECUTABLE}")
 
 ###############################################################################
 ### Checks
 ###############################################################################
+if(DATM AND DATM_CDEPS)
+   message(FATAL_ERROR "DATM=ON and DATM_CDEPS=ON are incompatible, ABORT!")
+endif()
+
 if(DATM AND NOT S2S)
    message(FATAL_ERROR "DATM=ON and S2S=OFF are incompatible, ABORT!")
+endif()
+
+if(DATM_CDEPS AND NOT S2S)
+   message(FATAL_ERROR "DATM_CDEPS=ON and S2S=OFF are incompatible, ABORT!")
 endif()
 
 if(S2S AND 32BIT)
@@ -160,8 +170,8 @@ target_include_directories(fms PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_D
                                       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/FMS/mod>
                                       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/FMS/mpp/include>)
 target_include_directories(fms INTERFACE
-                                      $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-                                      $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/mod>)
+                                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+                                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/mod>)
 target_link_libraries(fms PUBLIC MPI::MPI_Fortran
                                  NetCDF::NetCDF_Fortran)
 if(OpenMP_Fortran_FOUND)
@@ -174,7 +184,7 @@ set_target_properties(fms PROPERTIES PUBLIC_HEADER "${fms_headers}" )
 ###############################################################################
 ### stochastic_physics
 ###############################################################################
-if(NOT DATM)
+if(NOT DATM AND NOT CDEPS_DATM)
   add_subdirectory(stochastic_physics)
 endif()
 
@@ -183,6 +193,8 @@ endif()
 ###############################################################################
 if(DATM)
   add_subdirectory(DATM)
+elseif(DATM_CDEPS)
+  add_subdirectory(CDEPS)
 else()
   add_subdirectory(FV3)
 endif()
@@ -196,8 +208,6 @@ if(WW3)
       set(WW3_COMP "hera")
     elseif(${CMAKE_Platform} STREQUAL "orion.intel")
       set(WW3_COMP "orion")
-    elseif(${CMAKE_Platform} STREQUAL "cheyenne.intel")
-      set(WW3_COMP "cheyenne")
     elseif(${CMAKE_Platform} STREQUAL "wcoss2")
       set(WW3_COMP "wcoss_cray")
     elseif(${CMAKE_Platform} MATCHES "linux*" OR ${CMAKE_Platform} MATCHES "macosx*")
@@ -219,7 +229,7 @@ if(WW3)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/WW3/model/esmf
     COMMAND ${CMAKE_BUILD_TOOL} WW3_PARCOMPN=4 WW3_COMP=${WW3_COMP} ww3_nemslibonly > ${CMAKE_CURRENT_BINARY_DIR}/ww3_make.log 2>&1)
 
-    set(WW3_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/WW3/model/obj/libww3_multi_esmf.a)
+  set(WW3_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/WW3/model/obj/libww3_multi_esmf.a)
 endif()
 
 ###############################################################################
@@ -243,8 +253,7 @@ list(APPEND _nems_srcs NEMS/src/module_NEMS_UTILS.F90
                        NEMS/src/module_NEMS_INTERNAL_STATE.F90
                        NEMS/src/module_NEMS_GRID_COMP.F90
                        NEMS/src/module_NEMS_Rusage.F90
-                       NEMS/src/nems_c_rusage.c
-                       NEMS/src/ENS_Cpl/ENS_CplComp_ESMFMod_STUB.F90)
+                       NEMS/src/nems_c_rusage.c)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/NEMS/src/ESMFVersionDefine_ESMF_NUOPC.h
                ${CMAKE_CURRENT_BINARY_DIR}/NEMS/src/ESMFVersionDefine.h
@@ -259,20 +268,30 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/NEMS/src/ESMFConvenienceMacros.h
 
 add_library(ufs ${_nems_srcs})
 
-list(APPEND _ufs_defs_private ESMF_VERSION_MAJOR=${ESMF_VERSION_MAJOR}
+list(APPEND _ufs_defs_private ESMF_VERSION_MAJOR=${ESMF_VERSION_MAJOR} 
                               FRONT_FMS)
+if(CMEPS)
+  list(APPEND _ufs_def_private CMEPS=1)
+endif()
+
 add_dependencies(ufs fms)
 
 if(DATM)
   list(APPEND _ufs_defs_private FRONT_DATM=datm)
   add_dependencies(ufs datatm)
+elseif(DATM_CDEPS)
+  list(APPEND _ufs_defs_private FRONT_CDEPS_DATM=atm_comp_nuopc)
+  add_dependencies(ufs datm)
+  target_include_directories(ufs PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/CDEPS/datm)
 else()
   list(APPEND _ufs_defs_private FRONT_FV3=fv3gfs_cap_mod)
   add_dependencies(ufs fv3atm)
 endif()
+
 if(JEDI_DRIVER)
   list(APPEND _ufs_defs_private JEDI_DRIVER=ON)
 endif()
+
 set_target_properties(ufs PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod)
 target_include_directories(ufs PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/NEMS/src)
 
@@ -290,6 +309,13 @@ target_link_libraries(ufs PUBLIC esmf)
 
 if(DATM)
   target_link_libraries(ufs PUBLIC datatm)
+elseif(DATM_CDEPS)
+#  add_library(annoying_gptl_dependency STATIC memusage.c)
+#  target_link_libraries(ufs PUBLIC datm dshr streams cdeps_share FoX_dom annoying_gptl_dependency)
+  target_link_libraries(ufs PUBLIC datm dshr streams cdeps_share FoX_dom)
+  target_link_libraries(datm PUBLIC esmf PIO::PIO_Fortran)
+  target_link_libraries(streams PUBLIC PIO::PIO_Fortran)
+  target_link_libraries(cdeps_share PUBLIC PIO::PIO_Fortran)
 else()
   target_link_libraries(ufs PUBLIC fv3atm)
 endif()
@@ -297,7 +323,7 @@ endif()
 if(S2S)
   list(APPEND _ufs_defs_private FRONT_MOM6=mom_cap_mod
                                 FRONT_CICE6=ice_comp_nuopc
-                                CMEPS
+                                CMEPS=1
                                 FRONT_CMEPS=MED)
   add_dependencies(ufs mom6 cice cmeps)
   target_link_libraries(ufs PUBLIC mom6
@@ -314,6 +340,10 @@ add_executable(ufs_model NEMS/src/MAIN_NEMS.F90)
 
 list(APPEND _ufs_model_defs_private ESMF_VERSION_MAJOR=${ESMF_VERSION_MAJOR})
 
+if(CMEPS)
+  list(APPEND _ufs_model_defs_private CMEPS=1)
+endif()
+
 set_target_properties(ufs_model PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod)
 
 target_include_directories(ufs_model PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/NEMS/src)
@@ -326,7 +356,7 @@ endif()
 
 target_compile_definitions(ufs_model PRIVATE "${_ufs_model_defs_private}")
 
-if(DATM)
+if(DATM OR DATM_CDEPS)
   target_link_libraries(ufs_model PUBLIC ufs w3nco::w3nco_d)
 endif()
 target_link_libraries(ufs_model PRIVATE ufs
@@ -349,6 +379,8 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/FMS/mod DESTINATION ${CMAKE_INSTAL
 install(EXPORT fms-config
   DESTINATION lib/cmake
 )
+
+if(NOT CDEPS) ### FIXME
 install(
   TARGETS ufs
   EXPORT ufs-config
@@ -360,6 +392,7 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod DESTINATION ${CMAKE_INSTALL_PR
 install(EXPORT ufs-config
   DESTINATION lib/cmake
 )
+endif() ### FIXME
 ###############################################################################
 ### Done
 ###############################################################################

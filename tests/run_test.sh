@@ -118,6 +118,17 @@ if [[ $DATM = 'true' ]]; then
   cp ${PATHRT}/parm/datm_data_table.IN datm_data_table
 fi
 
+if [[ $DATM_CDEPS = 'true' ]]; then
+  edit_ice_in     < ${PATHRT}/parm/ice_in_template > ice_in
+  edit_mom_input  < ${PATHRT}/parm/${MOM_INPUT:-MOM_input_template_$OCNRES} > INPUT/MOM_input
+  edit_diag_table < ${PATHRT}/parm/diag_table_template > diag_table
+  cp ${PATHRT}/parm/fd_nems.yaml fd_nems.yaml
+  cp ${PATHRT}/parm/pio_in pio_in
+  cp ${PATHRT}/parm/med_modelio.nml med_modelio.nml
+  cp ${PATHRT}/parm/atm_modelio.nml atm_modelio.nml
+  cp ${PATHRT}/parm/datm_cfsr.streams.xml datm.streams.xml
+fi
+
 if [[ $SCHEDULER = 'pbs' ]]; then
   NODES=$(( TASKS / TPN ))
   if (( NODES * TPN < TASKS )); then
@@ -142,6 +153,7 @@ elif [[ $SCHEDULER = 'lsf' ]]; then
 fi
 
 atparse < ${PATHRT}/parm/${NEMS_CONFIGURE:-nems.configure} > nems.configure
+atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in} > datm_in
 
 ################################################################################
 # Submit test job

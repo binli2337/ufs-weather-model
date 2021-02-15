@@ -92,6 +92,10 @@ elif [[ $MACHINE_ID = orion.* ]]; then
   MPB_datm_025="0 39"; APB_datm_025="0 39"
   OPB_datm_025="40 159"; IPB_datm_025="160 207"
 
+  TASKS_datm_cdeps100=40; TPN_datm_cdeps100=40
+  MPB_datm_cdeps100="0 11"; APB_datm_cdeps100="0 11"
+  OPB_datm_cdeps100="12 27"; IPB_datm_cdeps100="28 39"
+
 elif [[ $MACHINE_ID = hera.* ]]; then
 
   TASKS_dflt=150 ; TPN_dflt=40 ; INPES_dflt=3 ; JNPES_dflt=8
@@ -602,6 +606,113 @@ export flux_scheme='0'
 export INPUT_NML=input.mom6.nml.IN
 export MODEL_CONFIGURE=datm_configure.IN
 export FIELD_TABLE="field_table"
+
+# MOM6 defaults; 1 degree
+export MOM_INPUT=MOM_input_template_100
+export MOM6_RESTART_SETTING='n'
+export MOM6_RIVER_RUNOFF='False'
+export FRUNOFF=""
+export CHLCLIM='"seawifs_1998-2006_smoothed_2X.nc"'
+# this must be set False for restart repro
+export MOM6_REPRO_LA='False'
+# since CPL_SLOW is set to DT_THERM, this should be always be false
+export MOM6_THERMO_SPAN='False'
+# no WW3
+export MOM6_USE_WAVES='False'
+
+# CICE6 defaults; 1 degree
+export MESHICE="mesh.mx${OCNRES}.nc"
+export CICEGRID="grid_cice_NEMS_mx${OCNRES}.nc"
+export CICEMASK="kmtu_cice_NEMS_mx${OCNRES}.nc"
+export RUNID='unknown'
+# set large; restart frequency now controlled by restart_n in nems.configure
+export DUMPFREQ='d'
+export DUMPFREQ_N=1000
+export USE_RESTART_TIME='.false.'
+export RESTART_EXT='.false.'
+# setting to true will allow Frazil FW and Salt to be
+# included in fluxes sent to ocean
+export FRAZIL_FWSALT='.true.'
+# default to write CICE average history files
+export CICE_HIST_AVG='.true.'
+export BL_SUFFIX=""
+export RT_SUFFIX=""
+}
+export_datm_cdeps_cfsr ()
+{
+export FV3=false
+export S2S=false
+export DATM=false
+export DATM_CDEPS=true
+export DAYS=1
+export FHMAX=24
+export WLCLK=30
+export THRD=1
+export FHROT='0'
+export WARM_START=.F.
+
+# atm/ocn/ice resolution
+export IATM=1760
+export JATM=880
+export ATMRES='1760x880'
+export OCNRES='100'
+export ICERES='1.00'
+export NX_GLB=360
+export NY_GLB=320
+export ATM_NX_GLB=$IATM
+export ATM_NY_GLB=$JATM
+
+# nems.configure
+export NEMS_CONFIGURE="nems.configure.datm_cdeps_cfsr.IN"
+export med_model="nems"
+#export atm_model="datm_cdeps_cfsr"
+export atm_model="datm_cfsr"
+export ocn_model="mom6"
+export ice_model="cice6"
+export atm_petlist_bounds=$APB_datm_cdeps100
+export med_petlist_bounds=$MPB_datm_cdeps100
+export ocn_petlist_bounds=$OPB_datm_cdeps100
+export ice_petlist_bounds=$IPB_datm_cdeps100
+export TASKS=$TASKS_datm_cdeps100
+export TPN=$TPN_datm_cdeps100
+export NPROC_ICE='12'
+
+export ENS_NUM=1
+export SYEAR='2011'
+export SMONTH='10'
+export SDAY='01'
+export SHOUR='00'
+export CDATE=${SYEAR}${SMONTH}${SDAY}${SHOUR}
+
+export NFHOUT=6
+export FDIAG=6
+export DT_ATMOS='900'
+export DT_CICE=${DT_ATMOS}
+export DT_DYNAM_MOM6='1800'
+export DT_THERM_MOM6='3600'
+export CPL_SLOW=${DT_THERM_MOM6}
+export CPL_FAST=${DT_ATMOS}
+export coupling_interval_slow_sec=${CPL_SLOW}
+export coupling_interval_fast_sec=${CPL_FAST}
+
+export RESTART_N=${FHMAX}
+export CPLMODE='nems_orig_data'
+export cap_dbug_flag="0"
+export use_coldstart=".false."
+export RUNTYPE='startup'
+export flux_convergence='0.0'
+export flux_iteration='1'
+export flux_scheme='0'
+
+export INPUT_NML=input.mom6.nml.IN
+export MODEL_CONFIGURE=datm_cdeps_configure.IN
+export FIELD_TABLE="field_table"
+
+# atm defaults
+export DATM_SRC="CFSR"
+export FILENAME_BASE='cfsr.'
+export MESH_ATM="DATM_INPUT/CFSR_ESMFmesh6.nc"
+export atm_datamode=${DATM_SRC}
 
 # MOM6 defaults; 1 degree
 export MOM_INPUT=MOM_input_template_100

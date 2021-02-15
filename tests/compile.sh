@@ -32,8 +32,8 @@ else
   MACHINE_ID=$1
   MAKE_OPT=${2:-}
   BUILD_NAME=fv3${3:+_$3}
-  clean_before=${4:-YES}
-  clean_after=${5:-YES}
+  clean_before=${4:-NO}
+  clean_after=${5:-NO}
 fi
 
 PATHTR=${PATHTR:-$( cd ${MYDIR}/.. && pwd )}
@@ -100,42 +100,46 @@ else
     CMAKE_FLAGS="${CMAKE_FLAGS} -DMULTI_GASES=OFF"
 fi
 
-# FIXME - create CCPP include directory before building FMS to avoid
-# gfortran warnings of non-existent include directory (adding
-# -Wno-missing-include-dirs) to the GNU compiler flags does not work,
-# see also https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55534);
-# this line can be removed once FMS becomes a pre-installed library
-mkdir -p $PATHTR/FV3/ccpp/include
-# Similar for this directory, which apparently never gets populated
-mkdir -p $PATHTR/FMS/fms2_io/include
+if [[ "${MAKE_OPT}" == *"CCPP=Y"* ]]; then
 
-CMAKE_FLAGS="${CMAKE_FLAGS} -DCCPP=ON -DMPI=ON"
+  # FIXME - create CCPP include directory before building FMS to avoid
+  # gfortran warnings of non-existent include directory (adding
+  # -Wno-missing-include-dirs) to the GNU compiler flags does not work,
+  # see also https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55534);
+  # this line can be removed once FMS becomes a pre-installed library
+  mkdir -p $PATHTR/FV3/ccpp/include
+  # Similar for this directory, which apparently never gets populated
+  mkdir -p $PATHTR/FMS/fms2_io/include
 
-if [[ "${MAKE_OPT}" == *"DEBUG=Y"* ]]; then
-  CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Debug"
-elif [[ "${MAKE_OPT}" == *"REPRO=Y"* ]]; then
-  CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Bitforbit"
-else
-  CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Release"
-  if [[ "${MACHINE_ID}" == "jet.intel" ]]; then
-    CMAKE_FLAGS="${CMAKE_FLAGS} -DSIMDMULTIARCH=ON"
+  CMAKE_FLAGS="${CMAKE_FLAGS} -DCCPP=ON -DMPI=ON"
+
+  if [[ "${MAKE_OPT}" == *"DEBUG=Y"* ]]; then
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Debug"
+  elif [[ "${MAKE_OPT}" == *"REPRO=Y"* ]]; then
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Bitforbit"
+  else
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Release"
+    if [[ "${MACHINE_ID}" == "jet.intel" ]]; then
+      CMAKE_FLAGS="${CMAKE_FLAGS} -DSIMDMULTIARCH=ON"
+    fi
   fi
-fi
 
-if [[ "${MAKE_OPT}" == *"32BIT=Y"* ]]; then
-  CMAKE_FLAGS="${CMAKE_FLAGS} -DDYN32=ON"
-else
-  CMAKE_FLAGS="${CMAKE_FLAGS} -DDYN32=OFF"
-fi
+  if [[ "${MAKE_OPT}" == *"32BIT=Y"* ]]; then
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DDYN32=ON"
+  else
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DDYN32=OFF"
+  fi
 
-  # Check if suites argument is provided or not
-set +ex
-TEST=$( echo $MAKE_OPT | grep -e "SUITES=" )
-if [[ $? -eq 0 ]]; then
-  CCPP_SUITES=$( echo $MAKE_OPT | sed 's/.*SUITES=//' | sed 's/ .*//' )
-  echo "Compiling suites ${CCPP_SUITES}"
+    # Check if suites argument is provided or not
+  set +ex
+  TEST=$( echo $MAKE_OPT | grep -e "SUITES=" )
+  if [[ $? -eq 0 ]]; then
+    CCPP_SUITES=$( echo $MAKE_OPT | sed 's/.*SUITES=//' | sed 's/ .*//' )
+    echo "Compiling suites ${CCPP_SUITES}"
+  fi
+  set -ex
+
 fi
-set -ex
 
 if [[ "${MAKE_OPT}" == *"WW3=Y"* ]]; then
     CMAKE_FLAGS="${CMAKE_FLAGS} -DWW3=Y"
@@ -147,6 +151,18 @@ fi
 
 if [[ "${MAKE_OPT}" == *"DATM=Y"* ]]; then
     CMAKE_FLAGS="${CMAKE_FLAGS} -DDATM=Y"
+fi
+
+if [[ "${MAKE_OPT}" == *"DATM_CDEPS=Y"* ]]; then
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DDATM_CDEPS=Y"
+fi
+
+if [[ "${MAKE_OPT}" == *"CMEPS=Y"* ]]; then
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMEPS=Y"
+fi
+
+if [[ "${MAKE_OPT}" == *"CDEPS=Y"* ]]; then
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCDEPS=Y"
 fi
 
 if [[ "${MAKE_OPT}" == *"S2S=Y"* ]] || [[ ${MAKE_OPT} == *"DATM=Y"* ]]; then
