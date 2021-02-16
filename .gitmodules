@@ -39,6 +39,6 @@
   url = https://github.com/NOAA-EMC/NEMSdatm
   branch = develop
 [submodule "CDEPS"]
-	path = CDEPS
-	url = https://github.com/binli2337/CDEPS
-  branch = feature/add_cfsr
+ path = CDEPS
+ url = https://github.com/binli2337/CDEPS
+ branch = feature/update02
