@@ -35,6 +35,7 @@ export NX_GLB=1440
 export NY_GLB=1080
 
 # resolution dependent files
+export DT_DYNAM_MOM6='900'
 export MOM_INPUT="MOM_input_template_${OCNRES}"
 export MESHOCN_ICE="mesh.mx${OCNRES}.nc"
 export CICEGRID="grid_cice_NEMS_mx${OCNRES}.nc"
