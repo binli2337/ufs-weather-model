@@ -1,0 +1,2 @@
+COMPILE | APP=ATM SUITES=FV3_GFS_v16,FV3_GFS_v16_RRTMGP                                                                           |                                         | fv3 |
+RUN     | fv3_gfs_v16                                                                                                             |                                         | fv3 |
