@@ -262,8 +262,10 @@ if [[ $DATM_CDEPS = 'true' ]] || [[ $S2S = 'true' ]]; then
   fi
 fi
 
-if [[ $HAFS = 'true' ]] && [[ $DATM_CDEPS = 'false' ]]; then
+if [[ $DATM_CDEPS = 'false' ]]; then
+  if [[ $HAFS = 'true' ]] || [[ $HAFS_MOM6 = 'true' ]]; then
   atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE:-diag_table_template} > diag_table
+  fi
 fi
 
 if [[ "${DIAG_TABLE_ADDITIONAL:-}Q" != Q ]] ; then
@@ -277,7 +279,7 @@ if [[ $CPLCHM == .true. ]] && [[ $S2S = 'false' ]]; then
   atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE:-diag_table_template} > diag_table
 fi
 
-if [[ $DATM_CDEPS = 'true' ]]; then
+if [[ $DATM_CDEPS = 'true' ]] || [[ $HAFS_MOM6 = 'true' ]]; then
   atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in} > datm_in
   atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
 fi

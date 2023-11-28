@@ -1374,25 +1374,6 @@ export NFHOUT_HF=3
 export NSOUT=-1
 export OUTPUT_FH=-1
 }
-export_hafs_regional_mom6 ()
-{
-export ATM_DATM=true
-# model_configure
-export SYEAR=2020
-export SMONTH=08
-export SDAY=25
-export SHOUR=12
-export SECS=`expr $SHOUR \* 3600`
-export FHMAX=3
-export DT_ATMOS=900
-export CPL=.true.
-export RESTART_INTERVAL=0
-export FHROT=0
-export OUTPUT_HISTORY=.true.
-export MESH_WAV=hafs_mom6_mesh.nc
-export CPLMODE=hafs_mom6
-export NEMS_CONFIGURE=nems.configure.hafs_atm_mom6.IN
-}
 export_hrrr() {
 export_fv3
 export NPZ=127
@@ -1616,4 +1597,38 @@ export IMFDEEPCNV=-1
 export LHEATSTRG=.false.
 export LSM=2
 export LSOIL_LSM=4
+}
+export_hafs_regional_mom6 ()
+{
+export ATM_DATM=true
+# model_configure
+export SYEAR=2020
+export SMONTH=08
+export SDAY=25
+export SHOUR=12
+export SECS=`expr $SHOUR \* 3600`
+export FHMAX=3
+export DT_ATMOS=900
+export FHROT=0
+export CPL=.true.
+export CPLMODE=hafs_mom6
+export RESTART_INTERVAL=0
+export FILENAME_BASE="'atm' 'sfc'"
+export CPL_IMP_MRG=.true.
+export OUTPUT_HISTORY=.true.
+#datm
+export ATM_NX_GLB=1135
+export ATM_NY_GLB=633
+export mesh_file=hafs_gfs_mesh.nc
+export MESH_ATM=DATM_INPUT/${mesh_file}
+export MESH_ATM_MODEL=hafs_mom6_mesh.nc
+export DATM_SRC=GFS_HAFS_WW3
+export atm_datamode=${DATM_SRC}
+export stream_files=DATM_INPUT/ocean_forcings.nc
+export DATM_IN_CONFIGURE=datm_hafs_mom6_in
+export DATM_STREAM_CONFIGURE=hafs_datm.streams.gfs.IN
+export HAFS_MOM6='true'
+# ufs.configure
+#export MESH_WAV=hafs_mom6_mesh.nc
+export UFS_CONFIGURE=ufs.configure.hafs_atm_mom6.IN
 }

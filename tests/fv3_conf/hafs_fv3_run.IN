@@ -1,5 +1,5 @@
-rm -rf INPUT RESTART
-mkdir  INPUT RESTART
+rm -rf INPUT OUTPUT RESTART
+mkdir  INPUT OUTPUT RESTART
 
 for file in $(find @[INPUTDATA_ROOT]/FV3_hafs_input_data/ -maxdepth 1 -type f); do
   cp $file ./
@@ -17,6 +17,8 @@ elif [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm" ] || \
      [ ${CNTL_DIR} = "hafs_regional_specified_moving_1nest_atm" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_ocn" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_ocn_debug" ] || \
+     [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_datm_ocn" ] || \
+     [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_datm_ocn_wav" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_ocn_wav" ]; then
   cp -r @[INPUTDATA_ROOT]/FV3_hafs_input_data/INPUT_hafs_regional_storm_following_1nest_atm/* ./INPUT/
 elif [ ${CNTL_DIR} = "hafs_regional_1nest_atm" ] || \

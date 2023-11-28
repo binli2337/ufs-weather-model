@@ -1,0 +1,3 @@
+cp @[HAFS_MOM6_INPUTDATA_ROOT]/MOM6_regional_input_data/* ./INPUT
+mv ./INPUT/hafs_mom6_mesh.nc .
+cp -r @[HAFS_MOM6_INPUTDATA_ROOT]/DATM_CDEPS/GFS_HAFS/DATM_INPUT .
