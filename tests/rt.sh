@@ -175,7 +175,7 @@ SKIP_ORDER=false
 RTPWD_NEW_BASELINE=false
 TESTS_FILE='rt.conf'
 NEW_BASELINES_FILE=''
-ACCNR=${ACCNR:-"fv3-cpu"}
+ACCNR=${ACCNR:-"hurricane"}
 RT_COMPILER="intel"
 #COMPILE_NR=0
 
