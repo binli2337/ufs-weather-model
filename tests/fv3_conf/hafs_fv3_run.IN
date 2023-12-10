@@ -17,7 +17,8 @@ elif [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm" ] || \
      [ ${CNTL_DIR} = "hafs_regional_specified_moving_1nest_atm" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_ocn" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_ocn_debug" ] || \
-     [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_datm_ocn" ] || \
+     [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_datm_ocn_no_ssc" ] || \
+     [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_datm_ocn_with_ssc" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_datm_ocn_wav" ] || \
      [ ${CNTL_DIR} = "hafs_regional_storm_following_1nest_atm_ocn_wav" ]; then
   cp -r @[INPUTDATA_ROOT]/FV3_hafs_input_data/INPUT_hafs_regional_storm_following_1nest_atm/* ./INPUT/

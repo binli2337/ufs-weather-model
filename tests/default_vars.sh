@@ -338,6 +338,8 @@ WLCLK_dflt=30
 export WLCLK=$WLCLK_dflt
 export CMP_DATAONLY=false
 export ATM_DATM=false
+export HAFS_MOM6='false'
+export ICPLOCN2ATM=0
 
 export_fv3 ()
 {

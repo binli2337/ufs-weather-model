@@ -6,7 +6,7 @@
 
 export TEST_DESCR="Compare HAFS regional with 1 storm-following moving nest and fv3-mom6 coupled results with previous trunk version"
 
-export CNTL_DIR=hafs_regional_storm_following_1nest_atm_datm_ocn
+export CNTL_DIR=hafs_regional_storm_following_1nest_atm_datm_ocn_with_ssc
 
 export LIST_FILES="atmf003.nc \
                    sfcf003.nc \
@@ -100,6 +100,7 @@ export FHLWR=1800
 export NSTF_NAME=0,0,0,0,0
 export CPLFLX=.true.
 export CPLOCN2ATM=.true.
+export ICPLOCN2ATM=1
 export CPLWAV=.false.
 export CPLWAV2ATM=.false.
 
