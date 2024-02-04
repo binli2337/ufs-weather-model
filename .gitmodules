@@ -3,7 +3,8 @@
   #url = https://github.com/hafs-community/fv3atm
   #branch = feature/hafsv2_baseline
   url = https://github.com/binli2337/fv3atm
-  branch = feature/hafs_v2_baseline_with_current
+  #branch = feature/hafs_v2_baseline_with_current
+  branch = feature/hafsv2_baseline_with_ssc
 [submodule "WW3"]
   path = WW3
   url = https://github.com/hafs-community/WW3
@@ -21,7 +22,8 @@
   #url = https://github.com/hafs-community/CMEPS
   #branch = feature/hafsv2_baseline
   url = https://github.com/binli2337/CMEPS
-  branch = hafsv2_baseline_add_current
+  #branch = hafsv2_baseline_add_current
+  branch = hafsv2_baseline_with_current
 [submodule "HYCOM"]
   path = HYCOM-interface/HYCOM
   url = https://github.com/NOAA-EMC/HYCOM-src
