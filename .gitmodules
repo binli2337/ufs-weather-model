@@ -2,9 +2,11 @@
   path = FV3
   #url = https://github.com/hafs-community/fv3atm
   #branch = feature/hafsv2_baseline
-  url = https://github.com/binli2337/fv3atm
+  #url = https://github.com/binli2337/fv3atm
   #branch = feature/hafs_v2_baseline_with_current
-  branch = feature/hafsv2_baseline_with_ssc
+  #branch = feature/hafsv2_baseline_with_ssc
+  url = https://github.com/NOAA-EMC/fv3atm
+  #branch = develop
 [submodule "WW3"]
   path = WW3
   url = https://github.com/hafs-community/WW3
