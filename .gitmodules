@@ -9,8 +9,10 @@
   #branch = develop
 [submodule "WW3"]
   path = WW3
-  url = https://github.com/hafs-community/WW3
-  branch = feature/hafsv2_baseline
+  #url = https://github.com/hafs-community/WW3
+  #branch = feature/hafsv2_baseline
+  url = https://github.com/NOAA-EMC/WW3
+  branch = dev/ufs-weather-model
 [submodule "stochastic_physics"]
   path = stochastic_physics
   url = https://github.com/NOAA-PSL/stochastic_physics
@@ -40,10 +42,10 @@
   branch = emc/develop
 [submodule "CDEPS"]
   path = CDEPS-interface/CDEPS
-  #url = https://github.com/NOAA-EMC/CDEPS
-  #branch = develop
-  url = https://github.com/hafs-community/CDEPS
-  branch = feature/hafsv2_baseline
+  url = https://github.com/NOAA-EMC/CDEPS
+  branch = develop
+  #url = https://github.com/hafs-community/CDEPS
+  #branch = feature/hafsv2_baseline
 [submodule "GOCART"]
   path = GOCART
   url = https://github.com/GEOS-ESM/GOCART
