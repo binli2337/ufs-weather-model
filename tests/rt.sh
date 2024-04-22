@@ -524,6 +524,8 @@ NEW_BASELINES_FILE=''
 DEFINE_CONF_FILE=false
 RUN_SINGLE_TEST=false
 ACCNR=${ACCNR:-""}
+#RT_COMPILER="intel"
+#COMPILE_ID="hafs_mom6w_intel"
 
 while getopts ":a:b:cl:mn:dwkreoh" opt; do
   case $opt in
@@ -715,7 +717,8 @@ elif [[ $MACHINE_ID = hera ]]; then
 
   PARTITION=
   dprefix=/scratch1/NCEPDEV
-  DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
+  #DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
+  DISKNM=/scratch1/NCEPDEV/hwrf/save/Bin.Li/UFS-WM_RT
   STMP=$dprefix/stmp4
   PTMP=$dprefix/stmp2
 
