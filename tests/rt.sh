@@ -573,8 +573,8 @@ RUN_SINGLE_TEST=false
 RTVERBOSE=false
 export RTVERBOSE
 export STOP_ECFLOW_AT_END=false
-ACCNR=${ACCNR:-""}
-#RT_COMPILER="intel"
+ACCNR=${ACCNR:-"fv3-cpu"}
+RT_COMPILER="intel"
 #COMPILE_ID="hafs_mom6w_intel"
 
 while getopts ":a:b:cl:mn:dwkreovh" opt; do
@@ -774,7 +774,8 @@ case ${MACHINE_ID} in
 
     PARTITION=
     dprefix="/scratch1/NCEPDEV"
-    DISKNM="/scratch2/NAGAPE/epic/UFS-WM_RT"
+    #DISKNM="/scratch2/NAGAPE/epic/UFS-WM_RT"
+    DISKNM="/scratch1/NCEPDEV/hwrf/save/Bin.Li/UFS-WM_RT"
     STMP="${dprefix}/stmp4"
     PTMP="${dprefix}/stmp2"
 
