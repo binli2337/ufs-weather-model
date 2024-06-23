@@ -106,6 +106,7 @@ export CPLFLX=.true.
 export CPLOCN2ATM=.true.
 export CPLWAV=.true.
 export CPLWAV2ATM=.true.
+export SFC_Z0_TYPE=-1
 
 # ww3
 export WW3_MODDEF=mod_def.natl_6m_2way_ocn_wav

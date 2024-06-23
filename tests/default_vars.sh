@@ -1331,6 +1331,7 @@ export_hafs_docn_cdeps ()
   export INPES=${INPES_dflt}
   export JNPES=${JNPES_dflt}
   export NTILES=1
+  export SFC_Z0_TYPE=6
 
   export ocn_model=docn
   export ocn_datamode=sstdata
@@ -1390,6 +1391,7 @@ export_hafs_regional ()
   export CPL_IMP_MRG=.true.
   export DIAG_TABLE=diag_table_hafs
   export FIELD_TABLE=field_table_hafs
+  export SFC_Z0_TYPE=6
 
   export OCNRES=''
   export ICERES=''
@@ -1442,6 +1444,7 @@ export DO_GSL_DRAG_LS_BL=.true.
 export DO_GSL_DRAG_SS=.true.
 export DO_GSL_DRAG_TOFD=.true.
 export IMP_PHYSICS=11
+export SFC_Z0_TYPE=6
 export IAER=111
 export CNVGWD=.false.
 export LTAEROSOL=.false.
