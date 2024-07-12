@@ -573,9 +573,7 @@ RUN_SINGLE_TEST=false
 RTVERBOSE=false
 export RTVERBOSE
 export STOP_ECFLOW_AT_END=false
-ACCNR=${ACCNR:-"fv3-cpu"}
-RT_COMPILER="intel"
-#COMPILE_ID="hafs_mom6w_intel"
+ACCNR=${ACCNR:-""}
 
 while getopts ":a:b:cl:mn:dwkreovh" opt; do
   case ${opt} in
