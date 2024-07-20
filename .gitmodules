@@ -6,10 +6,10 @@
   branch = feature/ocean_wave_coupling
 [submodule "WW3"]
   path = WW3
-  url = https://github.com/hafs-community/WW3
-  branch = feature/hafs.v2.0.1
-  #url = https://github.com/NOAA-EMC/WW3
-  #branch = dev/ufs-weather-model
+  #url = https://github.com/hafs-community/WW3
+  #branch = feature/hafs.v2.0.1
+  url = https://github.com/NOAA-EMC/WW3
+  branch = dev/ufs-weather-model
 [submodule "stochastic_physics"]
   path = stochastic_physics
   url = https://github.com/NOAA-PSL/stochastic_physics
