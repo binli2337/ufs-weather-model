@@ -104,9 +104,10 @@ export FHLWR=1800
 export NSTF_NAME=0,0,0,0,0
 export CPLFLX=.true.
 export CPLOCN2ATM=.true.
+export ICPLOCN2ATM=1
 export CPLWAV=.true.
 export CPLWAV2ATM=.true.
-export SFC_Z0_TYPE=-1
+export SFC_Z0_TYPE=6
 
 # ww3
 export WW3_MODDEF=mod_def.natl_6m_2way_ocn_wav
