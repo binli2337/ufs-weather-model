@@ -3,7 +3,7 @@
 ##############################################
 
 # ESMF #
-logKindFlag:            ESMF_LOGKIND_MULTI_ON
+logKindFlag:            ESMF_LOGKIND_MULTI_ON_ERROR
 globalResourceControl:  @[ESMF_THREADING]
 
 # EARTH #

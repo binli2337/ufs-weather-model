@@ -21,7 +21,7 @@
   #url = https://github.com/NOAA-EMC/CMEPS
   #branch = emc/develop
   url = https://github.com/binli2337/CMEPS
-  branch = feature/ocean_wave_update
+  branch = feature/update_wind_stress
 [submodule "HYCOM"]
   path = HYCOM-interface/HYCOM
   url = https://github.com/NOAA-EMC/HYCOM-src

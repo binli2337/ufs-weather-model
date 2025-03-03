@@ -3,7 +3,7 @@
 ##############################################
 
 # ESMF #
-logKindFlag:            ESMF_LOGKIND_MULTI_ON
+logKindFlag:            ESMF_LOGKIND_MULTI_ON_ERROR
 globalResourceControl:  @[ESMF_THREADING]
 
 # EARTH #
@@ -28,6 +28,7 @@ MED_attributes::
   history_ymd = -999
   coupling_mode = @[CPLMODE]
   normalization = none
+  factor_tau_hycom = 0.75
   merge_type = copy
   pio_rearranger = @[pio_rearranger]
 ::

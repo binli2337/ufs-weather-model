@@ -589,7 +589,7 @@ RUN_SINGLE_TEST=false
 RTVERBOSE=false
 export RTVERBOSE
 export STOP_ECFLOW_AT_END=false
-ACCNR=${ACCNR:-""}
+ACCNR=${ACCNR:-"hurricane"}
 
 while getopts ":a:b:cl:mn:dwkreovh" opt; do
   case ${opt} in
